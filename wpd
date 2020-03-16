@@ -1,0 +1,31 @@
+#!/system/bin/sh                                                                                                                                                                                       
+
+help()
+{
+   echo "wpd - WiFi Password Display for Android Oreo+ (Root)"
+   echo ""
+   echo "Shows all WiFi networks and passwords stored on your phone"
+   echo ""
+   echo "Usage: tsudo wpd"
+   echo ""
+   echo "-h, --help"
+   echo "    Print this help"
+   echo
+}
+
+while getopts ":h" option; do
+   case $option in
+      h|--help)
+         help
+         exit;;
+   esac
+done
+                                                                                                                                                                                                
+[ "$(whoami)" != "root" ] && { echo "wpd must be run as root"; exit 1; }                                                                                                                                         
+config=/data/misc/wifi/WifiConfigStore.xml                                                                                                                                                             
+SSID=($(grep 'name="SSID"' $config | sed "s/.*>&quot;//;s/&quot;.*//;s/ /-_-/g"))                                                                                                                      
+PSK=($(grep 'name="PreSharedKey"' $config | sed "s/.*>&quot;//;s/&quot;.*//;s/ /-_-/g"))                                                                                                               
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+for i in ${!SSID[@]}; do                                                                                                                                                                               
+  echo "${SSID[$i]} - ${PSK[$i]}" | sed "s/-_-/ /g"                                                                                                                                                    
+done
