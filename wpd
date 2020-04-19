@@ -1,31 +1,31 @@
-#!/data/data/com.termux/files/usr/bin/bash                                                                                                                                                             
-                                                                                                                                                                                                       
-help()                                                                                                                                                                                                 
-{                                                                                                                                                                                                      
-   echo "wpd - WiFi Password Display for Android Oreo+ (Root)"                                                                                                                                         
-   echo ""                                                                                                                                                                                             
-   echo "Shows all WiFi networks and passwords stored on your phone"                                                                                                                                   
-   echo ""                                                                                                                                                                                             
-   echo "Usage: tsudo wpd"                                                                                                                                                                             
-   echo ""                                                                                                                                                                                             
-   echo "-h, --help"                                                                                                                                                                                   
-   echo "    Print this help"                                                                                                                                                                          
-   echo                                                                                                                                                                                                
-}                                                                                                                                                                                                      
-                                                                                                                                                                                                       
-while getopts ":h" option; do                                                                                                                                                                          
-   case $option in                                                                                                                                                                                     
-      h|--help)                                                                                                                                                                                        
-         help                                                                                                                                                                                          
-         exit;;                                                                                                                                                                                        
-   esac                                                                                                                                                                                                
-done                                                                                                                                                                                                   
-                                                                                                                                                                                                       
-[ "$(whoami)" != "root" ] && { echo "wpd must be run as root"; exit 1; }                                                                                                                               
-config=/data/misc/wifi/WifiConfigStore.xml                                                                                                                                                             
-SSID=($(xml sel -t -v "//string[@name='SSID']" $config | sed -e 's/^"\(.*\)"$/\1/'))                                                                                                                   
-PSK=($(xml sel -t -v "//string[@name='PreSharedKey']" $config | sed 's/^"\(.*\)"$/\1/;s/\&amp;/\&/g;s/\&lt;/\</g;s/\&gt;/\>/g'))                                                                       
-                                                                                                                                                                                                       
-for i in ${!SSID[@]}; do                                                                                                                                                                               
-  echo "${SSID[$i]} - ${PSK[$i]}" | sed "s/-_-/ /g"                                                                                                                                                    
+#!/data/data/com.termux/files/usr/bin/bash
+
+help()
+{
+   echo "wpd - WiFi Password Display for Android Oreo+ (Root)"
+   echo ""
+   echo "Shows all WiFi networks and passwords stored on your phone"
+   echo ""
+   echo "Usage: tsudo wpd"
+   echo ""
+   echo "-h, --help"
+   echo "    Print this help"
+   echo
+}
+
+while getopts ":h" option; do
+   case $option in
+      h|--help)
+         help
+         exit;;
+   esac
+done
+
+[ "$(whoami)" != "root" ] && { echo "wpd must be run as root"; exit 1; }
+config=/data/misc/wifi/WifiConfigStore.xml
+SSID=($(grep 'name="SSID"' $config | sed 's/.*>&quot;//;s/&quot;.*//'))
+PSK=($(grep 'name="PreSharedKey"' $config | sed 's/<null.*/\NONE/;s/.*>&quot;//;s/\&amp;/\&/g;s/\&lt;/\</g;s/\&gt;/\>/g;s/[[:space:]]/\<space>/g;s/&quot;/\"/g;s/\"<\/string>//'))
+
+for i in ${!SSID[@]}; do
+  echo "${SSID[$i]} - ${PSK[$i]}"
 done
