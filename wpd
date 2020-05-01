@@ -24,6 +24,11 @@ done
 [ "$(whoami)" != "root" ] && { echo "wpd must be run as root"; exit 1; }
 config=/data/misc/wifi/WifiConfigStore.xml
 
+if [ ! -f $config ]; then
+	echo "WiFi config file not found"
+	exit 0
+fi
+
 SSID=($(grep 'name="SSID"' $config | sed 's/.*>&quot;//;s/\&amp;/\&/g;s/\&lt;/\</g;s/\&gt;/\>/g;s/&quot;/\"/g;s/[[:space:]]/\_/;s/\"<\/string>//'))
 PSK=($(grep 'name="PreSharedKey"' $config | sed 's/<null.*/\NONE/;s/.*>&quot;//;s/\&amp;/\&/g;s/\&lt;/\</g;s/\&gt;/\>/g;s/[[:space:]]/\<space>/g;s/&quot;/\"/g;s/\"<\/string>//'))
 
