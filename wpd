@@ -26,7 +26,7 @@ config=/data/misc/wifi/WifiConfigStore.xml
 
 if [ ! -f $config ]; then
 	echo "WiFi config file not found"
-	exit 0
+	exit 1
 fi
 
 SSID=($(grep 'name="SSID"' $config | sed 's/.*>&quot;//;s/\&amp;/\&/g;s/\&lt;/\</g;s/\&gt;/\>/g;s/&quot;/\"/g;s/[[:space:]]/\_/;s/\"<\/string>//'))
