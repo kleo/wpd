@@ -23,7 +23,8 @@ done
 
 [ "$(whoami)" != "root" ] && { echo "wpd must be run as root"; exit 1; }
 config=/data/misc/wifi/WifiConfigStore.xml
-SSID=($(grep 'name="SSID"' $config | sed 's/.*>&quot;//;s/&quot;.*//'))
+
+SSID=($(grep 'name="SSID"' $config | sed 's/.*>&quot;//;s/\&amp;/\&/g;s/\&lt;/\</g;s/\&gt;/\>/g;s/&quot;/\"/g;s/[[:space:]]/\_/;s/\"<\/string>//'))
 PSK=($(grep 'name="PreSharedKey"' $config | sed 's/<null.*/\NONE/;s/.*>&quot;//;s/\&amp;/\&/g;s/\&lt;/\</g;s/\&gt;/\>/g;s/[[:space:]]/\<space>/g;s/&quot;/\"/g;s/\"<\/string>//'))
 
 for i in ${!SSID[@]}; do
