@@ -6,7 +6,7 @@ help()
    echo ""
    echo "Shows all WiFi networks and passwords stored on your phone"
    echo ""
-   echo "Usage: tsudo wpd"
+   echo "Usage: sudo wpd"
    echo ""
    echo "-h, --help"
    echo "    Print this help"
